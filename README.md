@@ -1,7 +1,5 @@
 # Intranet Penetration CheetSheets
 
-# 内网渗透技巧
-
 Modified by: [z3r0yu](https://twitter.com/zeroyu_)
 Blog: http://zeroyu.xyz
 
