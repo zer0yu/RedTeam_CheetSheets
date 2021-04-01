@@ -699,7 +699,10 @@ busybox httpd
 ```
 busybox httpd -f -p 8000
 ```
-
+pwndrop -- 一款十分好用的投放漏洞载荷的工具
+```
+# https://github.com/kgretzky/pwndrop
+```
 
 
 ## 内网信息搜集 
