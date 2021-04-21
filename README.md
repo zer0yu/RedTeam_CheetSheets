@@ -703,7 +703,16 @@ pwndrop -- 一款十分好用的投放漏洞载荷的工具
 ```
 # https://github.com/kgretzky/pwndrop
 ```
-
+Swego -- golang实现的文件上传下载服务器
+```
+# https://github.com/nodauf/Swego
+./webserver
+```
+SimpleHTTPserver -- golang实现
+```
+# https://github.com/projectdiscovery/simplehttpserver
+simplehttpserver
+```
 
 ## 内网信息搜集 
 
@@ -1655,6 +1664,7 @@ http://www.vuln.cn/6812
 * DCOM 
 * [Winrm](https://github.com/Hackplayers/evil-winrm)
 * [SharpWmi](https://github.com/QAX-A-Team/sharpwmi) -- 基于135端口来进行横向移动的工具,具有执行命令和上传文件功能
+* [goWMIExec](https://github.com/C-Sto/goWMIExec) -- 纯golang实现，可以在linux环境下进行，不需要impacket的支持
 
 ### IOT相关 
 * 1. 路由器 [routersploit ](https://github.com/reverse-shell/routersploit)
