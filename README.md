@@ -334,6 +334,7 @@ ls xxx.yyy.cn #列出域信息
 * [LCX端口转发 ](http://blog.chinaunix.net/uid-53401-id-4407931.html)
 * [nps](https://github.com/cnlh/nps) -> 个人用觉得比较稳定 ～
 * [frp](https://github.com/fatedier/frp)
+* [frpModify](https://github.com/uknowsec/frpModify) -> 修改之后支持域前置以及自删除
 * 代理脚本 
     1. [Tunna ](https://github.com/SECFORCE/Tunna)
     2. [Reduh ](https://github.com/sensepost/reDuh)
