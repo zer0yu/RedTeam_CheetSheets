@@ -772,7 +772,8 @@ ftp等
 * [浏览器密码--HackBrowserData](https://github.com/moonD4rk/HackBrowserData)
 * [浏览器密码--BrowserGhost](https://github.com/QAX-A-Team/BrowserGhost)
 * [浏览器密码--SharpChromium](https://github.com/djhohnstein/SharpChromium)
-  
+* [GetPwd](https://github.com/sf197/GetPwd) -- 获取Navicat、TeamView、Xshell、SecureCRT产品的密码
+
 ##### Linux
 * [LaZagne](https://github.com/AlessandroZ/LaZagne)  
 * [mimipenguin](https://github.com/huntergregal/mimipenguin)
