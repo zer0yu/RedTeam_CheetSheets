@@ -338,6 +338,7 @@ ls xxx.yyy.cn #列出域信息
 * 代理脚本 
     1. [Tunna ](https://github.com/SECFORCE/Tunna)
     2. [Reduh ](https://github.com/sensepost/reDuh)
+* [pystinger](https://github.com/FunnyWolf/pystinger) -> 毒刺(pystinger)通过webshell实现内网SOCK4代理,端口映射.
 * ... 
   
 ### 内网跨边界代理穿透 
@@ -386,8 +387,12 @@ $ ./ew -s rssocks -d 127.0.0.1 -e 7777
 Neo-reGeorg : https://github.com/L-codes/Neo-reGeorg
 ### 内网隧道建立
 [chisel](https://github.com/jpillora/chisel)--文章介绍[《Red Team: Using SharpChisel to exfil internal network》](https://medium.com/@shantanukhande/red-team-using-sharpchisel-to-exfil-internal-network-e1b07ed9b49)
+
 [SharpChisel](https://github.com/shantanu561993/SharpChisel)--chisel的c#封装版本
+
 [mssqlproxy](https://github.com/blackarrowsec/mssqlproxy)--利用mssql执行clr作为传输通道(当目标机器只开放mssql时)
+
+[ligolo](https://github.com/FunnyWolf/ligolo) -- 轻量级的反向Socks5代理工具,所有的流量使用TLS加密
 
 ### shell反弹 
 bash  
