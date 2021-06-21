@@ -860,6 +860,8 @@ tasklist /S ip /U domain\username /P /V 查看远程计算机tasklist
 * 自建DNS服务器来获取内网域名对应的IP信息
     参考项目：[DNS SOCKS Proxy](https://github.com/jtripper/dns-tcp-socks-proxy)
     修改完配置文件之后使用如下命令就可以对内网域名进行查询：`dig @部署此项目电脑的IP地址 -p 配置文件中指定的端口 A +short 内网域名`
+* 主机关键文件以及文件内容信息查询
+    参考项目：[SharpSearch](https://github.com/djhohnstein/SharpSearch)
     
 
 ## 权限提升 
@@ -1749,6 +1751,7 @@ wevtutil cl "windows powershell"
 利用工具 
 * [Invoke-Phant0m](https://github.com/hlldz/Invoke-Phant0m) 
 * [Windwos-EventLog-Bypass](https://github.com/3gstudent/Windwos-EventLog-Bypass) 
+* [Phant0m | Windows Event Log Killer]()
 
 ### msf 
 ```
