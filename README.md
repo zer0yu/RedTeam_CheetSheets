@@ -787,6 +787,9 @@ ftp等
 * [浏览器密码--SharpChromium](https://github.com/djhohnstein/SharpChromium)
 * [浏览器密码--chromepass](https://github.com/darkarp/chromepass) -- 获取并解密 Google Chrome, Chromium, Edge, Brave, Opera and Vivaldi 保存的cookie和密码
 * [GetPwd](https://github.com/sf197/GetPwd) -- 获取 Navicat、TeamView、Xshell、SecureCRT产品的密码
+* [FireFox-Thief](https://github.com/LimerBoy/FireFox-Thief) -- passwords, cookies, history, bookmarks
+* [Adamantium-Thief](https://github.com/LimerBoy/Adamantium-Thief) -- passwords, credit cards, history, cookies, bookmarks, autofill
+* [goLazagne](https://github.com/kerbyj/goLazagne) -- Browsers[Chromium-based;Mozilla Firefox;Internet Explorer and Edge]/Mail[Thunderbird ; [TBD] Outlook]/Windows[Credential Manager]/SysAdmin tools[Mobaxterm;Putty;Filezilla;Openssh]/WiFi passwords
 
 ##### Linux
 * [LaZagne](https://github.com/AlessandroZ/LaZagne)  
