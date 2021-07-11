@@ -334,6 +334,53 @@ ls xxx.yyy.cn #列出域信息
 * [LCX端口转发 ](http://blog.chinaunix.net/uid-53401-id-4407931.html)
 * [nps](https://github.com/cnlh/nps) -> 个人用觉得比较稳定 ～
 * [frp](https://github.com/fatedier/frp)
+```
+socks5环境VPS配置：
+
+[common]
+bind_addr = 0.0.0.0
+bind_port = 7000
+
+
+#其实可以不配置下面这些,web界面只会消耗内存
+# IP 与 bind_addr 默认相同，可以不设置
+# dashboard_addr = 0.0.0.0 
+# 端口必须设置，只有设置web页面才生效
+dashboard_port = 7500
+# 用户密码保平安
+dashboard_user = admin1
+dashboard_pwd = hadaessd@@@!!@@#
+# 允许客户端绑定的端口
+allow_ports = 40000-50000
+ 
+启动服务端：
+
+nohup ./frps -c frps.ini &
+```
+
+```
+目标机上配置：
+
+#编辑frpc.ini内容如下，与frpc一并上传到服务器
+# chmod +x frpc(最好将其改个名，比如deamon）
+[common]
+#remote vps addr
+server_addr = your vps addr
+#端口自选
+server_port = 7000    
+tls_enable = true
+pool_count = 5
+
+[plugin_socks]
+type = tcp
+remote_port = 46075
+plugin = socks5
+plugin_user = admin
+plugin_passwd = password
+use_encryption = true
+use_compression = true
+```
+
 * [frpModify](https://github.com/uknowsec/frpModify) -> 修改之后支持域前置以及自删除
 * 代理脚本 
     1. [Tunna ](https://github.com/SECFORCE/Tunna)
