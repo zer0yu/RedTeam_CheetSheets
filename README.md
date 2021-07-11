@@ -857,6 +857,7 @@ ftp等
 * [AssetScan](https://github.com/JE2Se/AssetScan) -- 集成了弱口令检测
 * [ServerScan](https://github.com/Adminisme/ServerScan) -- 可以联动CS3.14中的[CrossC2](https://github.com/gloxec/CrossC2)项目进行跨平台扫描
 * [netscan](https://github.com/jessfraz/netscan) -- Go语言写的网段端口扫描器
+* [fscan](https://github.com/shadow1ng/fscan)
 * ...
 ##### 网卡信息扫描(开放135端口)
 * [Ladon](https://github.com/k8gege/Ladon)
