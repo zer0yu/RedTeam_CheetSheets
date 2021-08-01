@@ -218,6 +218,9 @@ Table of Contents
 * ghostproject: https://ghostproject.fr/
 * pwndb: https://pwndb2am4tzkvold.onion.to/
 
+#### 加密密码破解
+* pwcrack-framework(自动猜测可能的加密方式并破解): https://github.com/L-codes/pwcrack-framework
+
 #### 对企业外部相关信息进行搜集
 ##### 子域名获取 
 * Layer子域名挖掘机4.2纪念版 
