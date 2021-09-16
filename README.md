@@ -287,7 +287,7 @@ chdir('..');
 ini_set('open_basedir','/');
 ```
 
-2. 系统命令执行绕过
+2. 系统命令执行绕过；
 
    system("cd /;ls")
 
